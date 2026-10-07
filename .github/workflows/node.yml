@@ -8,7 +8,7 @@ jobs:
   build:
     env:
       CI: true
-      MONGO_URL: mongodb://localhost/nasa
+      MONGO_URL: mongodb://127.0.0.1:27017/nasa
     strategy:
       matrix:
         node-version: [20.x]
@@ -25,6 +25,11 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
       - run: npm install
+      - name: Check versions
+      - run: |
+          node --version
+          npm --version
+          npm ls mongoose mongodb
       - run: npm run build --prefix client
       - run: npm test
 
