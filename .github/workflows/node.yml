@@ -30,6 +30,24 @@ jobs:
             node --version
             npm --version
             npm ls mongoose mongodb --prefix server
+      - name: Test MongoDB driver connection
+        run: |
+          node - <<'NODE'
+          const { MongoClient } = require('./server/node_modules/mongodb');
+
+          const client = new MongoClient(process.env.MONGO_URL);
+
+          client.connect()
+          .then(async () => {
+            console.log('✅ MongoDB driver connection successful');
+            await client.close();
+          })
+          .catch((err) => {
+            console.error('❌ MongoDB driver connection failed');
+            console.error(err);
+            process.exit(1);
+          });
+          NODE
       - run: npm run build --prefix client
       - run: npm test
 
